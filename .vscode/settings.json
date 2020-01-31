@@ -1,0 +1,25 @@
+{
+	"editor.tabSize": 2,
+	"editor.insertSpaces": true,
+	"files.insertFinalNewline": true,
+	"files.exclude": {
+		"**/.git": true
+	},
+	"search.exclude": {
+		"**/node_modules": true,
+		".vscode": true
+	},
+	"[typescript]": {
+		"editor.formatOnSave": false
+	},
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact"
+	],
+	"eslint.enable": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	}
+}

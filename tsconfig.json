@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noEmitHelpers": true,
+    "noEmitOnError": true,
+    "importHelpers": true,
+    "strict": true,
+    "baseUrl": ".",
+    "skipLibCheck": true,
+    "lib": [
+      "es2015",
+    ],
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "*": [
+        "./node_modules/*"
+      ],
+      "~/*": [
+        "src/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "types", "src/main.ts"
+  ],
+  "exclude": [
+    "node_modules",
+  ]
+}
