@@ -44,13 +44,20 @@ abstract class Model {
     this.id = id;
   }
 
+  get modelClass(): typeof Model {
+    return this.constructor as typeof Model;
+  }
+
+  getConfig(): ModelConfig {
+    return this.modelClass.config;
+  }
+
   public static async create<T extends Model>(this: ModelClass<T>, dataOrModel: SchemaOf<T> | T): Promise<T> {
     try {
       const { data } = await axios.post(this.config.endpoint, dataOrModel);
       return new this(data);
     } catch (e) {
-      console.log('error', e);
-      throw e;
+      return e;
     }
   }
 
@@ -79,8 +86,7 @@ abstract class Model {
       const items = data.map((item: any) => new this(item));
       return items;
     } catch (e) {
-      console.log('error', e);
-      throw e;
+      return e;
     }
   }
 
@@ -113,28 +119,27 @@ abstract class Model {
 
       return new this(data);
     } catch (e) {
-      console.log('error', e);
-      throw e;
+      return e;
     }
   }
 
-  public static async update<T extends Model>(this: ModelClass<T>, model: T): Promise<T> {
-    try {
-      const { data } = await axios.patch(`${this.config.endpoint}/${model.id}`, model);
-      return new this(data);
-    } catch (e) {
-      console.log('error', e);
-      throw e;
-    }
-  }
+  public static async updateById<T extends Model>(this: ModelClass<T>, id: ModelIdType, dataModel: Partial<SchemaOf<T>>): Promise<T>;
 
-  public static async updateById<T extends Model>(this: ModelClass<T>, id: ModelIdType, dataModel: Partial<SchemaOf<T>>): Promise<T> {
+  public static async updateById<T extends Model>(this: ModelClass<T>, dataModel: Partial<SchemaOf<T>>): Promise<T>;
+
+  public static async updateById<T extends Model>(this: ModelClass<T>, paramOne: ModelIdType | Partial<SchemaOf<T>>, dataModel?: Partial<SchemaOf<T>>): Promise<T> {
     try {
-      const { data } = await axios.patch(`${this.config.endpoint}/${id}`, dataModel);
-      return new this(data);
+      let data;
+      if (paramOne === 'number' || paramOne === 'string') {
+        data = await axios.patch(`${this.config.endpoint}/${paramOne}`, dataModel);
+      } else if (paramOne instanceof this) {
+        data = await axios.patch(`${this.config.endpoint}/${paramOne}`, dataModel);
+      } else {
+        throw Error('Error');
+      }
+      return new this(data.data);
     } catch (e) {
-      console.log('error', e);
-      throw e;
+      return e;
     }
   }
 
@@ -143,15 +148,23 @@ abstract class Model {
       const { data } = await axios.delete(`${this.config.endpoint}/${id}`);
       return data;
     } catch (e) {
-      console.log('error', e);
-      throw e;
+      return e;
     }
   }
 
-  // /**
-  //  * Push changes that has occured on the instance
-  //  */
-  // save<T extends Model>(): Promise<T>;
+  /**
+   * Push changes that has occured on the instance
+   */
+  // save<T extends Model>(): Promise<T> {
+  async save<T extends Model>(): Promise<any> {
+    const { endpoint } = this.getConfig();
+    try {
+      const { data } = await axios.patch(`${endpoint}/${this.id}`, this);
+      return this;
+    } catch (e) {
+      return e;
+    }
+  }
 
   // /**
   //  * Push given changes, and update the instance

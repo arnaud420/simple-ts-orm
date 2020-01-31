@@ -21,25 +21,29 @@ async function run(): Promise<Album> {
   //   title: 'enim repellat iste',
   // });
 
-  const data = await Album.findById(1);
+  const album = await Album.findById(1, {
+    includes: ['user'],
+  });
 
-  // const album = new Album(data);
+  if (album.user) {
+    album.user.username = 'Toto';
+    const test = await album.user.save();
+    console.log('test', test);
+  }
 
-  // const updated = Album.update(album);
+  // const album = new Album(album);
+
 
   // console.log(albums);
   // return albums;
-  console.log('album', data);
 
-  data.title = 'test title';
+  // const updated = Album.updateById(album);
 
-  // data.user = new User({
+  // album.user = new User({
   //   id: 1, name: 'test', username: 'test', address: 'test', email: 'test',
   // });
 
-  console.log('album', data);
-
-  return data;
+  return album;
 }
 
 app.listen(port);

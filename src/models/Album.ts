@@ -9,9 +9,9 @@ class Album extends Model {
 
   userId: number;
 
-  user?: User | null;
+  readonly user?: User;
 
-  photos?: Photo[] | null;
+  readonly photos?: Photo[];
 
   constructor(data: Album) {
     super(data.id);

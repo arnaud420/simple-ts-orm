@@ -56,7 +56,8 @@ module.exports = {
     // @todo those should be enabled, disabled for debugging
     'no-console': 0,
     '@typescript-eslint/no-explicit-any': 0,
+    'no-dupe-class-members': 0,
 
-    'max-len': ['warn', 100]
+    'max-len': ['warn', 130]
   }
 }
