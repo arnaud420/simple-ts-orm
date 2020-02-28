@@ -103,7 +103,6 @@ abstract class Model {
           const { endpoint } = model.config;
 
           if (type === RelationType.BelongsTo) {
-            // TODO: supprimer le await pour executer la requete dans le promise all
             const modelReq = await axios.get(`${endpoint}/${data[foreignKey]}`);
             data[include] = new model(modelReq.data);
           }
@@ -171,10 +170,18 @@ abstract class Model {
   //  */
   // update<T extends Model>(data: Partial<SchemaOf<T>>): Promise<T>;
 
-  // /**
-  //  * Remove the remote data
-  //  */
-  // remove(): Promise<void>;
+  /**
+   * Remove the remote data
+   */
+  async remove(): Promise<boolean> {
+    const { endpoint } = this.getConfig();
+    try {
+      const { data } = await axios.delete(`${endpoint}/${this.id}`);
+      return true;
+    } catch (e) {
+      return e;
+    }
+  }
 }
 
 /**
